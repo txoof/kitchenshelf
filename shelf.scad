@@ -145,22 +145,33 @@ function randVect(min=0, max=100) = rands(min, max, 2);
 
 
 module shelfPolyYZ() {
-  seed=44;
 
+  wall=15;
+  //seed=rands(1,50, 1);
+  seed=[25];
+  echo(seed);
+
+  randPoints = [randVect(0, shelfY*2), randVect(0, shelfY*2), randVect(0, shelfY*2), randVect(0, shelfY*2), randVect(0, shelfY*2)]; 
+  
   points = [[0,0], [shelfY, 0], [shelfY, shelfZ], [0, supportYZ]];
-  pointsSM = [[10, 10], [shelfY-10, 10], [shelfY-10, shelfZ-10], [10, supportYZ-10]];
-  randPoints = [randVect(), randVect(), randVect(), randVect(), randVect(), randVect(), randVect(), randVect(), randVect()];
-  echo(randPoints);
-  difference() {
-    polygon(points);
-    #polygon(pointsSM);
-    /*
-    resize([shelfY-20, supportYZ-20]) 
-      translate([10, 10, 0])
+  angle = atan((supportYZ-shelfZ)/shelfY);
+  pointsSM = [[wall, wall],
+              [shelfY-wall, wall],
+              [shelfY-wall, shelfZ-wall],
+              [wall, (shelfZ-wall)+(shelfY-2*wall)*tan(angle)]];
+//              [wall, (wall*tan(angle))+(tan(angle)/(shelfY-2*wall))]];
+
+    difference() {
+      polygon(pointsSM);
+      translate([-shelfY/3, -shelfY/3])
+        random_voronoi(nuclei=false, n=64, round=5, min=shelfY/10, max=shelfY, seed=round(seed[0]));
+    
+    }
+    
+    difference() {
       polygon(points);
-    //voronoi(points=randPoints, round=supportYZ*.1, nuclei=false, L=supportYZ);
-    */
-  }
+      polygon(pointsSM);
+    }
 }
 
 !shelfPolyYZ();
