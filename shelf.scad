@@ -152,10 +152,10 @@ module shelfPolyYZ(wall=15, seed=[23]) {
 
   points = [[0,0], [shelfY, 0], [shelfY, shelfZ], [0, supportZ]];
   angle = atan((supportZ-shelfZ)/shelfY);
-  pointsSM = [[wall, wall],
-              [shelfY-wall, wall],
-              [shelfY-wall, shelfZ-wall],
-              [wall, (shelfZ-wall)+(shelfY-2*wall)*tan(angle)]];
+  pointsSM = [[wall, wall], //lower left
+              [shelfY-wall, wall], //lower right
+              [shelfY-wall, shelfZ-(wall/4)],
+              [wall, (shelfZ-wall/2)+(shelfY-2*wall/2)*tan(angle)]];
 
     translate([-shelfY/2, -supportZ/2, 0])
     union() {
