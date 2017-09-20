@@ -164,15 +164,15 @@ module shelfPolyYZ(wall=15, seed=[23]) {
         translate([-shelfY/3, -shelfY/2, 0])
         resize([shelfY*1.5, shelfY*1.5, 0])
           random_voronoi(nuclei=false, n=64, round=10, min=0, max=400, seed=round(seed[0]));
-        translate([(shelfY-uFingerY*finger)/2, 0, 0])
-          rotate([])
-          insideCuts(length = shelfY, finger = finger, cutD = material, uDiv = uFingerY);
       
       }
       
       difference() {
         polygon(points);
         polygon(pointsSM);
+        translate([(shelfY-uFingerY*finger)/2, 0, 0])
+          rotate([])
+          insideCuts(length = shelfY, finger = finger, cutD = material, uDiv = uFingerY);
       }
     }
 }
