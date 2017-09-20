@@ -3,10 +3,10 @@ include <../libraries/voronoi.scad>
 
 shelfX = 400;
 shelfY = 200;
-shelfZ = 35;
+shelfZ = 80;
 
 shelfBack = 180;
-supportZ = shelfBack*.5;
+supportZ = shelfBack*.8;
 
 finger = 10;
 
@@ -150,7 +150,10 @@ module shelfPolyYZ(seed=[25]) {
   edgeThick = wall+material;
 
   maxFingerY = floor(shelfY/finger);
+  maxFingerZ = floor(shelfZ/finger);
+
   uFingerY = (maxFingerY%2)==0 ? maxFingerY-3 : maxFingerY-2;
+  uFingerZ = (maxFingerZ%2)==0 ? maxFingerZ-3 : maxFingerZ-2;
 
   points = [[0,0], [shelfY, 0], [shelfY, shelfZ], [0, supportZ]];
   angle = atan((supportZ-shelfZ)/shelfY);
@@ -179,14 +182,19 @@ module shelfPolyYZ(seed=[25]) {
       difference() {
         polygon(points);
         polygon(pointsSM);
+        //bottom edge
         translate([(shelfY-uFingerY*finger)/2, 0, 0])
           rotate([])
           insideCuts(length = shelfY, finger = finger, cutD = material, uDiv = uFingerY);
+
+        translate([shelfY, (shelfZ-uFingerZ*finger)/2, 0])
+          rotate([0, 0, 90])
+          insideCuts(length = shelfZ, finger = finger, cutD = material, uDiv = uFingerZ);
       }
     }
 }
 
-!shelfPolyYZ();
+//!shelfPolyYZ();
 module shelfBack() {
   
 }
@@ -199,8 +207,8 @@ module shelf2D() {
     rotate([0, 0, 180])
     shelfXZ();
 
-  translate([-(shelfX/2+supportZ/2+separation), 0, 0])
-    rotate([0, 0, 90])
+  translate([(shelfX/2+supportZ/2+separation), 0, 0])
+    rotate([0, 0, -90])
     shelfPolyYZ();
   /*
   translate([-(shelfX/2+shelfZ/2+separation), 0, 0])
