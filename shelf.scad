@@ -12,6 +12,7 @@ finger = 10;
 
 material = 4.2;
 
+wall = 5;
 
 /* [Hidden] */
 
@@ -144,18 +145,26 @@ module shelfYZ() {
 function randVect(min=0, max=100) = rands(min, max, 2);
 
 
-module shelfPolyYZ(wall=15, seed=[23]) {
+module shelfPolyYZ(seed=[25]) {
   //seed=rands(1,50, 1);
+  edgeThick = wall+material;
 
   maxFingerY = floor(shelfY/finger);
   uFingerY = (maxFingerY%2)==0 ? maxFingerY-3 : maxFingerY-2;
 
   points = [[0,0], [shelfY, 0], [shelfY, shelfZ], [0, supportZ]];
   angle = atan((supportZ-shelfZ)/shelfY);
+
+  /*
   pointsSM = [[wall, wall], //lower left
               [shelfY-wall, wall], //lower right
               [shelfY-wall, shelfZ-(wall/4)],
               [wall, (shelfZ-wall/2)+(shelfY-2*wall/2)*tan(angle)]];
+  */
+  pointsSM = [[edgeThick, edgeThick], //lower left corner
+              [shelfY-edgeThick, edgeThick], //lower right corner
+              [shelfY-edgeThick, shelfZ-edgeThick/2],
+              [edgeThick, shelfZ-edgeThick/2+(shelfY-2*edgeThick)*tan(angle)]];
 
     translate([-shelfY/2, -supportZ/2, 0])
     union() {
@@ -163,7 +172,7 @@ module shelfPolyYZ(wall=15, seed=[23]) {
         polygon(pointsSM);
         translate([-shelfY/3, -shelfY/2, 0])
         resize([shelfY*1.5, shelfY*1.5, 0])
-          random_voronoi(nuclei=false, n=64, round=10, min=0, max=400, seed=round(seed[0]));
+          random_voronoi(nuclei=false, n=64, round=13, min=0, max=400, seed=round(seed[0]));
       
       }
       
