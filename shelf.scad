@@ -6,7 +6,7 @@ shelfY = 200;
 shelfZ = 35;
 
 shelfBack = 180;
-supportYZ = shelfBack*.5;
+supportZ = shelfBack*.5;
 
 finger = 10;
 
@@ -144,38 +144,40 @@ module shelfYZ() {
 function randVect(min=0, max=100) = rands(min, max, 2);
 
 
-module shelfPolyYZ() {
-
-  wall=15;
+module shelfPolyYZ(wall=15, seed=[23]) {
   //seed=rands(1,50, 1);
-  seed=[25];
-  echo(seed);
 
-  randPoints = [randVect(0, shelfY*2), randVect(0, shelfY*2), randVect(0, shelfY*2), randVect(0, shelfY*2), randVect(0, shelfY*2)]; 
-  
-  points = [[0,0], [shelfY, 0], [shelfY, shelfZ], [0, supportYZ]];
-  angle = atan((supportYZ-shelfZ)/shelfY);
+  maxFingerY = floor(shelfY/finger);
+  uFingerY = (maxFingerY%2)==0 ? maxFingerY-3 : maxFingerY-2;
+
+  points = [[0,0], [shelfY, 0], [shelfY, shelfZ], [0, supportZ]];
+  angle = atan((supportZ-shelfZ)/shelfY);
   pointsSM = [[wall, wall],
               [shelfY-wall, wall],
               [shelfY-wall, shelfZ-wall],
               [wall, (shelfZ-wall)+(shelfY-2*wall)*tan(angle)]];
-//              [wall, (wall*tan(angle))+(tan(angle)/(shelfY-2*wall))]];
 
-    difference() {
-      polygon(pointsSM);
-      translate([-shelfY/3, -shelfY/3])
-        random_voronoi(nuclei=false, n=64, round=5, min=shelfY/10, max=shelfY, seed=round(seed[0]));
-    
-    }
-    
-    difference() {
-      polygon(points);
-      polygon(pointsSM);
+    translate([-shelfY/2, -supportZ/2, 0])
+    union() {
+      difference() {
+        polygon(pointsSM);
+        translate([-shelfY/3, -shelfY/2, 0])
+        resize([shelfY*1.5, shelfY*1.5, 0])
+          random_voronoi(nuclei=false, n=64, round=10, min=0, max=400, seed=round(seed[0]));
+        translate([(shelfY-uFingerY*finger)/2, 0, 0])
+          rotate([])
+          insideCuts(length = shelfY, finger = finger, cutD = material, uDiv = uFingerY);
+      
+      }
+      
+      difference() {
+        polygon(points);
+        polygon(pointsSM);
+      }
     }
 }
 
 !shelfPolyYZ();
-
 module shelfBack() {
   
 }
@@ -188,13 +190,17 @@ module shelf2D() {
     rotate([0, 0, 180])
     shelfXZ();
 
+  translate([-(shelfX/2+supportZ/2+separation), 0, 0])
+    rotate([0, 0, 90])
+    shelfPolyYZ();
+  /*
   translate([-(shelfX/2+shelfZ/2+separation), 0, 0])
     rotate([0, 180, 90])
     shelfYZ();
   translate([(shelfX/2+shelfZ/2+separation), 0, 0])
     rotate([0, 0, -90])
     shelfYZ();
-
+  */
 
 }
 
