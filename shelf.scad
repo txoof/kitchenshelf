@@ -5,8 +5,8 @@ shelfX = 400;
 shelfY = 200;
 shelfZ = 80;
 
-shelfBack = 180;
-supportZ = shelfBack*.8;
+shelfBackZ = 380;
+supportZ = shelfBackZ*.7;
 
 finger = 10;
 
@@ -195,11 +195,11 @@ module shelfPolyYZ(seed=[25]) {
     }
 }
 
-//!shelfPolyYZ();
 module shelfBack() {
-  
+  square([shelfX, supportZ], center = true); 
 }
 
+!shelfBack();
 
 module shelf2D() {
   shelfXY();
@@ -256,7 +256,3 @@ module shelf3D() {
 shelf2D();
 
 //shelf3D();
-
-
-
-
