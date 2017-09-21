@@ -196,7 +196,19 @@ module shelfPolyYZ(seed=[25]) {
 }
 
 module shelfBack() {
-  square([shelfX, supportZ], center = true); 
+  union() { 
+    difference() {
+      square([shelfX, supportZ], center = true); 
+      translate([0, supportZ/2, 0])
+      circle(r=shelfX/6, center =true);
+    }
+    translate([shelfX/2-shelfX/6, supportZ/2, 0])
+      circle(r=shelfX/6, center = true);
+    translate([-shelfX/2+shelfX/6, supportZ/2, 0])
+      resize([shelfX/3, shelfX/1, 0])
+      circle(r=shelfX/6, center = true);
+  }
+
 }
 
 !shelfBack();
