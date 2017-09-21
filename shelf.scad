@@ -170,6 +170,7 @@ module shelfPolyYZ(seed=[25]) {
               [edgeThick, shelfZ-edgeThick/2+(shelfY-2*edgeThick)*tan(angle)]];
 
     translate([-shelfY/2, -supportZ/2, 0])
+    color("purple")
     union() {
       difference() {
         polygon(pointsSM);
@@ -207,9 +208,15 @@ module shelf2D() {
     rotate([0, 0, 180])
     shelfXZ();
 
+ 
   translate([(shelfX/2+supportZ/2+separation), 0, 0])
     rotate([0, 0, -90])
     shelfPolyYZ();
+  
+  translate([-(shelfX/2+supportZ/2+separation), 0, 0])
+    rotate([180, 0, -90])
+    shelfPolyYZ();
+
   /*
   translate([-(shelfX/2+shelfZ/2+separation), 0, 0])
     rotate([0, 180, 90])
