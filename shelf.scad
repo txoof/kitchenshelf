@@ -195,6 +195,8 @@ module shelfPolyYZ(seed=[25]) {
     }
 }
 
+
+//move this into a module for drawing tear-dropped shapes
 module shelfBack() {
   
   //Customizable properties
