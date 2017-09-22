@@ -216,10 +216,9 @@ module hanger() {
 }
 
 
-module shelfBack(resizeVal=1) {
+module shelfBack() {
   //center the back vertically
   translate([0, -(shelfBackZ-supportZ)/2, 0]) 
-    scale([resizeVal, resizeVal, 1])
     difference() {
       union() {
         square([shelfX, supportZ], center = true);
@@ -236,15 +235,27 @@ module shelfBack(resizeVal=1) {
 
 //shelfBack();
   
-assembleBack();  
+assembleBack(seed=[36]);  
 module assembleBack() {
-  pctShrink = (shelfX-2*(finger+wall))/shelfX;
-  echo(pctShrink);
-  difference() {
-    shelfBack();
-    #shelfBack(pctShrink);
+  offsetRad = -2*(finger+wall);
+  union() {
+    difference() {
+      shelfBack();
+      offset(r = offsetRad) {
+        shelfBack();
+      }
+    }
+    difference() {
+      offset(r=offsetRad+.01) {
+        shelfBack();
+      }
+      translate([-shelfX/2, -shelfBackZ/2, 0])
+        resize([shelfX*1.5, shelfBackZ*1.5, 0])
+        random_voronoi(nuclei=false, n=64, round=19, min=0, max=400, seed=round(seed[0]));
+    }
   }
 }
+
 
 module shelf2D() {
   shelfXY();
