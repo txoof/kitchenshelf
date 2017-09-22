@@ -196,19 +196,22 @@ module shelfPolyYZ(seed=[25]) {
 }
 
 module shelfBack() {
-  union() { 
-    difference() {
-      square([shelfX, supportZ], center = true); 
-      translate([0, supportZ/2, 0])
-      circle(r=shelfX/6, center =true);
-    }
-    translate([shelfX/2-shelfX/6, supportZ/2, 0])
-      circle(r=shelfX/6, center = true);
-    translate([-shelfX/2+shelfX/6, supportZ/2, 0])
-      resize([shelfX/3, shelfX/1, 0])
-      circle(r=shelfX/6, center = true);
-  }
+  
+  //Customizable properties
+  rad = shelfX*.1;
+  slender = .3;
 
+  xRad = shelfX/6;
+  zHeight = shelfBackZ-supportZ;
+  
+
+  hull() {
+     translate([0, (zHeight-rad)]) 
+        circle(r=rad, center = true);
+      #translate([0, (shelfBackZ-supportZ)*slender/2])
+        square([2*xRad, (shelfBackZ-supportZ)*slender], center = true);
+
+  }
 }
 
 !shelfBack();
