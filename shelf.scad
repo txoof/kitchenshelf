@@ -197,26 +197,43 @@ module shelfPolyYZ(seed=[25]) {
 
 
 //move this into a module for drawing tear-dropped shapes
-module shelfBack() {
+module hanger() {
   
   //Customizable properties
-  rad = shelfX*.1;
-  slender = .3;
+  rad = shelfX*.08;
+  slender = .01;
 
   xRad = shelfX/6;
   zHeight = shelfBackZ-supportZ;
-  
 
-  hull() {
-     translate([0, (zHeight-rad)]) 
-        circle(r=rad, center = true);
-      #translate([0, (shelfBackZ-supportZ)*slender/2])
-        square([2*xRad, (shelfBackZ-supportZ)*slender], center = true);
+    hull() {
+       translate([0, (zHeight-rad)]) 
+          circle(r=rad, center = true);
+        translate([0, (shelfBackZ-supportZ)*slender/2])
+          square([2*xRad, (shelfBackZ-supportZ)*slender], center = true);
+    }
 
-  }
 }
 
-!shelfBack();
+shelfBack();
+
+module shelfBack() {
+  //center the back vertically
+  translate([0, -(shelfBackZ-supportZ)/2, 0]) 
+    difference() {
+      union() {
+        square([shelfX, supportZ], center = true);
+        for (i=[-1, 1]) {
+          translate([i*shelfX/3, supportZ/2, 0])
+            hanger();
+        }
+      }
+      translate([0, supportZ/2, 0])
+        rotate([0, 0, 180])
+        hanger();
+    }
+}
+
 
 module shelf2D() {
   shelfXY();
@@ -270,6 +287,6 @@ module shelf3D() {
 
 }
 
-shelf2D();
+//shelf2D();
 
 //shelf3D();
