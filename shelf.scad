@@ -5,7 +5,7 @@ shelfX = 400;
 shelfY = 200;
 shelfZ = 80;
 
-shelfBackZ = 380;
+shelfBackZ = 300;
 supportZ = shelfBackZ*.7;
 
 finger = 10;
@@ -215,11 +215,11 @@ module hanger() {
 
 }
 
-shelfBack();
 
-module shelfBack() {
+module shelfBack(resizeVal=1) {
   //center the back vertically
   translate([0, -(shelfBackZ-supportZ)/2, 0]) 
+    scale([resizeVal, resizeVal, 1])
     difference() {
       union() {
         square([shelfX, supportZ], center = true);
@@ -234,6 +234,17 @@ module shelfBack() {
     }
 }
 
+//shelfBack();
+  
+assembleBack();  
+module assembleBack() {
+  pctShrink = (shelfX-2*(finger+wall))/shelfX;
+  echo(pctShrink);
+  difference() {
+    shelfBack();
+    #shelfBack(pctShrink);
+  }
+}
 
 module shelf2D() {
   shelfXY();
