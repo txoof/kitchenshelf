@@ -8,15 +8,24 @@ module trapezoid(h = 10, b1 = 10, b2 = 5) {
   polygon(points);
 }
 
-module trunk(size = 50, depth = 5, seed = 10,
+module trunk(size = 50, depth = 6, seed = 40,
             widthBottom = 0.25, widthTop = 0.20, joint = 0.1, 
-            minGrowth = 0.85, maxGrowth = 1.2, decay = 0.85,
-            leafScale = 0.5) {
+            minGrowth = 0.8, maxGrowth = 1.2, 
+            leafScale = 0.5, leaf = false) {
 
-    branch_two(size = size*.9, depth = depth, seed = seed+2,
-              widthBottom = widthBottom, widthTop = widthTop,
-              joint = joint, minGrowth = minGrowth, maxGrowth = maxGrowth,
-              decay = decay, leafScale = leafScale);
+    entropy = rands(0.1, leafScale, seed+2)[0];
+
+    if (size > 5) {
+      branch_two(size = size*.9, depth = depth, seed = seed+2,
+                widthBottom = widthBottom, widthTop = widthTop,
+                joint = joint, minGrowth = minGrowth, maxGrowth = maxGrowth,
+                leafScale = leafScale, leaf = leaf);
+    } else {
+       if (leaf) {
+        color("red")
+          leaf(size*entropy, seed);
+      }
+    }
 }
 
 module leaf(size, seed) {
@@ -27,37 +36,36 @@ module leaf(size, seed) {
 }
 
 module branch_two(size, depth, seed, widthBottom, widthTop, joint,
-                  minGrowth, maxGrowth, decay, leafScale = 0.5,
-                  leaf = false) {
-  sizemod = rands(minGrowth, maxGrowth, 10, seed+1);
-  entropy = rands(0.01, leafScale, seed+2)[0];
-  rotations = rands(-10, 10, 10, seed+3);
+                  minGrowth, maxGrowth, leafScale,
+                  leaf) {
+  sizemod = rands(minGrowth, maxGrowth, 10, seed);
+  entropy = rands(0.1, leafScale, seed+2)[0];
+  rotations = rands(-10, 10, 10, seed);
 
   color("blue")
-    trapezoid(h = size, b1 = size*widthBottom, b2 = size*widthTop);
+    trapezoid(h = size*sizemod[0], b1 = size*widthBottom, b2 = size*widthTop);
 
-  translate([0, size, 0])
+  translate([0, size*sizemod[0], 0])
     if (depth > 0) {
       union() {
         circle(r = size*joint);
-        rotate([0, 0, 35+rotations[0]])
-          trunk(size = size*.9*sizemod[0], depth = depth-1, seed = seed+2,
+        rotate([0, 0, 30+rotations[0]])
+          trunk(size = size*.9*sizemod[1], depth = depth-1, seed = seed+2,
+                widthBottom = widthBottom, widthTop = widthTop, joint = joint,
+                minGrowth = minGrowth, maxGrowth = maxGrowth, 
+                leafScale = leafScale, leaf = leaf);
+        rotate([0, 0, -30+rotations[1]])
+          trunk(size = size*.9*sizemod[2], depth = depth-1, seed = seed+3,
                 widthBottom = widthBottom, widthTop = widthTop, joint = joint,
                 minGrowth = minGrowth, maxGrowth = maxGrowth, decay = decay,
-                leafScale = leafScale);
-        rotate([0, 0, -35+rotations[1]])
-          trunk(size = size*.9*sizemod[5], depth = depth-1, seed = seed+3,
-                widthBottom = widthBottom, widthTop = widthTop, joint = joint,
-                minGrowth = minGrowth, maxGrowth = maxGrowth, decay = decay,
-                leafScale = leafScale);
+                leafScale = leafScale, leaf = leaf);
       } 
     } else {
       if (leaf) {
         color("red")
-          //circle(r = size*entropy);
           leaf(size*entropy, seed);
       }
     }
 }
 
-trunk(depth = 7, decay = 0.85, leafScale = 0.5, seed = 53 );
+//trunk(size = 50, depth = 8, leafScale = .5, seed = 42, minGrowth = .7, leaf = true);
