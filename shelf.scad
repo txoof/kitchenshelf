@@ -16,6 +16,7 @@ material = 4.2;
 wall = 5;
 
 cutouts = false;
+//cutouts = true;
 
 /* [Hidden] */
 
@@ -145,6 +146,7 @@ module shelfYZ() {
   }
 }
 
+
 module shelfPolyYZ(seed=[25]) {
   //seed=rands(1,50, 1);
   edgeThick = wall+material;
@@ -207,18 +209,16 @@ module assembleXZBack() {
   union() {
     difference() {
       shelfXZBack(r=50);
-      //offset(delta = -1*(wall+finger)) {
-      //  shelfXZBack(r=50);
-      //}
-    
-      difference() {
-        offset(delta = -1*(wall+finger)) {
-          shelfXZBack(r=50);
-        }
-        #translate([0, -shelfBackZ/1.5, 0])
-          trunk(size = shelfBackZ/4, depth = 10, seed = 10);
- 
+      offset(delta = -1*(wall+finger)) {
+        shelfXZBack(r=50);
       }
+    } 
+    difference() {
+      offset(delta = -1*(wall+finger)) {
+        shelfXZBack(r=50);
+      }       translate([0, -shelfBackZ/2, 0])
+        trunk(size = shelfBackZ/6, depth = 9, seed = 10);
+
     }
 
   }
