@@ -148,7 +148,7 @@ module branch_three(size, depth, seed=1) {
 }
  
 
-//trunk(height, number_of_iterations, random_seed);
+trunk(height, number_of_iterations, random_seed);
 
 
 
