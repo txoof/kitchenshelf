@@ -11,7 +11,7 @@ number_of_iterations = 9;
 height = 45; //[1:10]
 
 //maximum size of leaf realative to the branch
-leaf_scale=1; //[0.1:10]
+leaf_scale=.6; //[0.1:10]
 
 /* [Advanced Parameters] */
 //control the amount of taper on each branch segment
@@ -44,10 +44,12 @@ module leaf(r=10) {
 
 module trunk(size, depth, seed) {
   //create an array of random numbers to choose the branch type
-  operation = rands(1, 2, 1, seed+5);
+  //operation = rands(1, 2, 1, seed+5);
 
-  branch_two(size*.9, depth, seed+2);
-
+  
+  if (size > 5) {
+    branch_two(size*.9, depth, seed+2);
+  }
   /*
   //only proceed if the branch size is larger than 5
   if (size > 5) {
@@ -100,7 +102,7 @@ module branch_two(size, depth, seed=1) {
   //sizemod = rands(rate_of_decay, 1.15, 10);
   sizemod = rands(min_rate_of_growth, max_rate_of_growth, 10, seed+1);
   entropy = rands(0.01, leaf_scale, seed+2)[0];
-  rotations = rands(-35, 35, seed+3);
+  rotations = rands(-25, 25, seed+3);
 
   color("blue")
     trapezoid(h = size, b1 = size*width_ratio_bottom, b2 = size*width_ratio_top);
@@ -109,9 +111,9 @@ module branch_two(size, depth, seed=1) {
     if (depth > 0) {
       union() {
         circle(r = size*joint_size);
-        rotate([0, 0, 20+rotations[0]])
+        rotate([0, 0, 30+rotations[0]])
           trunk(size*.9*sizemod[0], depth-1, seed+2);
-        rotate([0, 0, -20+rotations[1]])
+        rotate([0, 0, -30+rotations[1]])
           trunk(size*.9*sizemod[1], depth-1, seed+3);
       }
 
