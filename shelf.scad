@@ -1,5 +1,6 @@
 //Kitchen Shelf
 include <../libraries/voronoi.scad>
+include <./fractal_2d.scad>
 
 shelfX = 400;
 shelfY = 200;
@@ -145,6 +146,8 @@ module shelfYZ() {
 function randVect(min=0, max=100) = rands(min, max, 2);
 
 
+shelfPolyYZ();
+
 module shelfPolyYZ(seed=[25]) {
   //seed=rands(1,50, 1);
   edgeThick = wall+material;
@@ -233,9 +236,9 @@ module shelfBack() {
     }
 }
 
-//shelfBack();
   
-assembleBack(seed=[36]);  
+//assembleBack(seed=[36]);
+
 module assembleBack() {
   offsetRad = -2*(finger+wall);
   union() {

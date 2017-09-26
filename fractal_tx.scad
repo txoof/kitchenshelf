@@ -5,10 +5,10 @@
 random_seed = 45;
 
 //maximum size of a leaf relative to the branch
-leaf_scale = 2.0; //[0.10:10.0]
+leaf_scale = .10; //[0.10:10.0]
 
 //depth of recursion
-number_of_iterations = 2; //[1:10]
+number_of_iterations = 5; //[1:10]
 
 //starting height of frist branch
 height = 45; //[1:100]
@@ -34,40 +34,50 @@ module trapezoid(h = 10, b1 = 10, b2 = 5) {
   polygon(points);
 }
 
-module trunk(size, depth, seed) {
-  //create an array of random numbers
-  operation = rands(0, 1, 1, seed+5);
-  echo("trunk:", operation[0]);
 
-    if (operation[0] < 0) {
-      branch_one(size*.9, depth, seed+1);
-    }
+module trunk(size, depth, seed)
+{
+    //create an array of random numbers
+    operation = rands(1, 3, 1, seed+5);
 
-    if (operation[0] < 1) {
-      branch_two(size*.9, depth, seed+2);
+    //automatically stop if the size gets too small so we dont waste computation time on tiny little twigs
+    if (size > 5)
+    {
+        //choose a module based on that array
+        if (operation[0] < 1)
+        {
+            branch_one(size*.9, depth, seed+1);          
+        }
+        if (operation[0] < 2)
+        {
+            branch_two(size*.9, depth, seed+2);          
+        }
+        else if (operation[0] < 3)
+        {
+            branch_three(size*.9, depth, seed+3);          
+        }
+        else if (operation[0] < 4)
+        {
+            branch_four(size*.9, depth, seed+4);          
+        }
     }
-
-    if (operation[0] < 3) {
-      branch_three(size*.9, depth, seed+3);
-    }
-  
+    
 }
 
-module branch_one(size, depth, seed) {
-  sizemod = rands(min_rate_of_growth,max_rate_of_growth,10, seed+1);
-  entropy = rands(0.01,leaf_scale,1, seed+2);
-  rotations = rands(-20,20,10, seed+3);
 
+module branch_one(size, depth, seed) {
+  sizemod = rands(min_rate_of_growth, max_rate_of_growth, 10, seed+1);
+  entropy = rands(0.01,leaf_scale,1, seed+2);
+  rotations = rands(-20, 20, 10, seed+3);
 
   color("blue")
     trapezoid(h = size, b1 = size*width_ratio_bottom, b2 = size*width_ratio_top);
   translate([0, size, 0])
     if (depth > 0) {
-    
       union() {
         //create a joint
         circle(r = size*joint_size, center = true);
-        rotate([0, 0, 0+rotations[0]])
+        rotate([0, 0    , 0+rotations[0]])
           trunk(size*.9, depth-1, seed+1);
       }
     
@@ -89,9 +99,9 @@ module branch_two(size, depth, seed) {
     if (depth > 0) {
       union() {
         circle(r = size*joint_size, center = true);
-        rotate([0, 0, 0+rotations[0]])
+        rotate([0, 0, 0])
           trunk(size*.9*sizemod[0], depth-1, seed+2);
-        rotate([0, 0, 180+rotations[1]])
+        rotate([0, 0, 180])
           trunk(size*.9*sizemod[1], depth-1, seed+3);
       }
     } else {
