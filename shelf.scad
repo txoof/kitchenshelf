@@ -7,13 +7,15 @@ shelfY = 200;
 shelfZ = 80;
 
 shelfBackZ = 300;
-supportZ = shelfBackZ*.7;
+supportZ = shelfBackZ*.5;
 
 finger = 10;
 
 material = 4.2;
 
 wall = 5;
+
+cutouts = false;
 
 /* [Hidden] */
 
@@ -161,31 +163,25 @@ module shelfPolyYZ(seed=[25]) {
   points = [[0,0], [shelfY, 0], [shelfY, shelfZ], [0, supportZ]];
   angle = atan((supportZ-shelfZ)/shelfY);
 
-  /*
-  pointsSM = [[wall, wall], //lower left
-              [shelfY-wall, wall], //lower right
-              [shelfY-wall, shelfZ-(wall/4)],
-              [wall, (shelfZ-wall/2)+(shelfY-2*wall/2)*tan(angle)]];
-  */
-  pointsSM = [[edgeThick, edgeThick], //lower left corner
-              [shelfY-edgeThick, edgeThick], //lower right corner
-              [shelfY-edgeThick, shelfZ-edgeThick/2],
-              [edgeThick, shelfZ-edgeThick/2+(shelfY-2*edgeThick)*tan(angle)]];
 
+    
     translate([-shelfY/2, -supportZ/2, 0])
-    color("purple")
-    union() {
-      difference() {
-        polygon(pointsSM);
-        translate([-shelfY/3, -shelfY/2, 0])
-        resize([shelfY*1.5, shelfY*1.5, 0])
-          random_voronoi(nuclei=false, n=64, round=13, min=0, max=400, seed=round(seed[0]));
-      
-      }
-      
+      color("purple")
+        
+
       difference() {
         polygon(points);
-        polygon(pointsSM);
+
+        difference() {
+          offset(delta=-(wall+finger)) {
+            polygon(points);
+          }
+          if (cutouts) {
+            translate([shelfY/2, 0, 0])
+              trunk(size = supportZ/5, depth = 9, seed = 10);
+          }
+        }
+
         //bottom edge
         translate([(shelfY-uFingerY*finger)/2, 0, 0])
           rotate([])
@@ -195,7 +191,6 @@ module shelfPolyYZ(seed=[25]) {
           rotate([0, 0, 90])
           insideCuts(length = shelfZ, finger = finger, cutD = material, uDiv = uFingerZ);
       }
-    }
 }
 
 
