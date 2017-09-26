@@ -1,5 +1,5 @@
 //Kitchen Shelf
-include <../libraries/voronoi.scad>
+//include <../libraries/voronoi.scad>
 include <./fractal_2d.scad>
 
 shelfX = 400;
@@ -145,11 +145,6 @@ module shelfYZ() {
   }
 }
 
-function randVect(min=0, max=100) = rands(min, max, 2);
-
-
-shelfPolyYZ();
-
 module shelfPolyYZ(seed=[25]) {
   //seed=rands(1,50, 1);
   edgeThick = wall+material;
@@ -193,7 +188,46 @@ module shelfPolyYZ(seed=[25]) {
       }
 }
 
+module shelfXZBack(r=50) {
+  //#square([shelfX, shelfBackZ], center = true);
+  hull() {
+    translate([0, -r/2])
+      square([shelfX-2*r, shelfBackZ-r], center = true);
+    for (i=[-1,1]) {
+      translate([i*(shelfX/2-r), shelfBackZ/2-r])
+        circle(r=r);
+      translate([i*(shelfX/2-r), -(shelfBackZ/2-r)])
+        square(r*2, center = true);
+    }
 
+  }
+}
+
+module assembleXZBack() {
+  union() {
+    difference() {
+      shelfXZBack(r=50);
+      //offset(delta = -1*(wall+finger)) {
+      //  shelfXZBack(r=50);
+      //}
+    
+      difference() {
+        offset(delta = -1*(wall+finger)) {
+          shelfXZBack(r=50);
+        }
+        #translate([0, -shelfBackZ/1.5, 0])
+          trunk(size = shelfBackZ/4, depth = 10, seed = 10);
+ 
+      }
+    }
+
+  }
+}
+
+assembleXZBack();
+
+
+/*
 //move this into a module for drawing tear-dropped shapes
 module hanger() {
   
@@ -232,7 +266,7 @@ module shelfBack() {
 }
 
   
-//assembleBack(seed=[36]);
+//assembleBack();
 
 module assembleBack() {
   offsetRad = -2*(finger+wall);
@@ -246,6 +280,7 @@ module assembleBack() {
     difference() {
       offset(r=offsetRad+.01) {
         shelfBack();
+
       }
       translate([-shelfX/2, -shelfBackZ/2, 0])
         resize([shelfX*1.5, shelfBackZ*1.5, 0])
@@ -253,7 +288,7 @@ module assembleBack() {
     }
   }
 }
-
+*/
 
 module shelf2D() {
   shelfXY();
