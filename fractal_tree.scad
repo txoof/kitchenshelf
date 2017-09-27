@@ -38,7 +38,7 @@ module trunk(size = 50, depth = 6, seed = 40,
       
     } else {
        if (leaf) {
-        color("red")
+        //color("red")
           leaf(size*entropy, seed);
       }
     }
@@ -58,7 +58,7 @@ module branch_one(size, depth, seed, widthBottom, widthTop, joint,
   entropy = rands(0.1, leafScale, seed+2)[0];
   rotations = rands(-10, 10, 10, seed);
 
-  color("orange")
+  //color("orange")
     trapezoid(h = size*sizemod[0], b1 = size*widthBottom, b2 = size*widthTop);
 
   translate([0, size*sizemod[0], 0])
@@ -73,7 +73,7 @@ module branch_one(size, depth, seed, widthBottom, widthTop, joint,
       } 
     } else {
       if (leaf) {
-        color("red")
+        //color("red")
           leaf(size*entropy, seed);
       }
     }
@@ -88,7 +88,7 @@ module branch_two(size, depth, seed, widthBottom, widthTop, joint,
   entropy = rands(0.1, leafScale, seed+2)[0];
   rotations = rands(-10, 10, 10, seed);
 
-  color("yellow")
+  //color("yellow")
     trapezoid(h = size*sizemod[0], b1 = size*widthBottom, b2 = size*widthTop);
 
   translate([0, size*sizemod[0], 0])
@@ -103,12 +103,12 @@ module branch_two(size, depth, seed, widthBottom, widthTop, joint,
         rotate([0, 0, -30+rotations[1]])
           trunk(size = size*.9*sizemod[2], depth = depth-1, seed = seed+3,
                 widthBottom = widthBottom, widthTop = widthTop, joint = joint,
-                minGrowth = minGrowth, maxGrowth = maxGrowth, decay = decay,
+                minGrowth = minGrowth, maxGrowth = maxGrowth, 
                 leafScale = leafScale, leaf = leaf);
       } 
     } else {
       if (leaf) {
-        color("red")
+        //color("red")
           leaf(size*entropy, seed);
       }
     }
@@ -121,7 +121,7 @@ module branch_three(size, depth, seed, widthBottom, widthTop, joint,
   entropy = rands(0.1, leafScale, seed+2)[0];
   rotations = rands(-10, 10, 10, seed);
 
-  color("green")
+  //color("green")
     trapezoid(h = size*sizemod[0], b1 = size*widthBottom, b2 = size*widthTop);
 
   translate([0, size*sizemod[0], 0])
@@ -141,12 +141,12 @@ module branch_three(size, depth, seed, widthBottom, widthTop, joint,
         rotate([0, 0, -50+rotations[2]])
           trunk(size = size*.9*sizemod[2], depth = depth-1, seed = seed+3,
                 widthBottom = widthBottom, widthTop = widthTop, joint = joint,
-                minGrowth = minGrowth, maxGrowth = maxGrowth, decay = decay,
+                minGrowth = minGrowth, maxGrowth = maxGrowth, ,
                 leafScale = leafScale, leaf = leaf);
       } 
     } else {
       if (leaf) {
-        color("red")
+        //color("red")
           leaf(size*entropy, seed);
       }
     }
