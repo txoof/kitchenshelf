@@ -13,7 +13,7 @@ finger = 10;
 
 material = 4.2;
 
-wall = 5;
+wall = 8;
 
 cutouts = false;
 //cutouts = true;
@@ -96,6 +96,7 @@ module shelfXY() {
   }
 }
 
+
 module shelfXZ() {
   maxFingerX = floor(shelfX/finger);
   maxFingerZ = floor(shelfZ/finger);
@@ -116,10 +117,21 @@ module shelfXZ() {
     translate([-(shelfX/2-material), -shelfZ/2, 0])
       rotate([0, 0, 90])
       outsideCuts(length = shelfZ, finger = finger, cutD = material, uDiv = uFingerZ);
+    
+    difference() {
+      offset(delta = -(wall+material*2)) {
+        square([shelfX, shelfZ], center = true);
+      }
+      if (cutouts) {
+        translate([0, -shelfX/2])
+          trunk(size = shelfX/4, depth = 6, seed = 322, minGrowth = 0.84);
+      }
+    }
 
   }
 	
 }
+
 
 
 module shelfYZ() {
@@ -147,7 +159,7 @@ module shelfYZ() {
 }
 
 
-module shelfPolyYZ(seed=[25]) {
+module shelfPolyYZ(seed=42) {
   //seed=rands(1,50, 1);
   edgeThick = wall+material;
 
@@ -158,7 +170,6 @@ module shelfPolyYZ(seed=[25]) {
   uFingerZ = (maxFingerZ%2)==0 ? maxFingerZ-3 : maxFingerZ-2;
 
   points = [[0,0], [shelfY, 0], [shelfY, shelfZ], [0, supportZ]];
-  angle = atan((supportZ-shelfZ)/shelfY);
 
 
     
@@ -170,12 +181,12 @@ module shelfPolyYZ(seed=[25]) {
         polygon(points);
 
         difference() {
-          offset(delta=-(wall+finger)) {
+          offset(delta=-(wall+material)) {
             polygon(points);
           }
           if (cutouts) {
-            translate([shelfY/2, 0, 0])
-              trunk(size = supportZ/5, depth = 9, seed = 10);
+            translate([shelfY/2, -supportZ/2, 0])
+              trunk(size = supportZ/2.5, depth = 6, seed = seed, minGrowth = 0.75);
           }
         }
 
@@ -204,83 +215,36 @@ module shelfXZBack(r=50) {
 
   }
 }
+assembleXZBack();
+
+//shelf2D();
 
 module assembleXZBack() {
+  maxFingerY = floor(shelfY/finger);
+  maxFingerX = floor(shelfX/finger);
+
+  uFingerY = (maxFingerY%2)==0 ? maxFingerY-3 : maxFingerY-2;
+  uFingerX = (maxFingerX%2)==0 ? maxFingerX-3 : maxFingerX-2;
+
   union() {
     difference() {
       shelfXZBack(r=50);
-      offset(delta = -1*(wall+finger)) {
-        shelfXZBack(r=50);
-      }
-    } 
 
-  }
-}
-
-
-
-/*
-//move this into a module for drawing tear-dropped shapes
-module hanger() {
-  
-  //Customizable properties
-  rad = shelfX*.08;
-  slender = .01;
-
-  xRad = shelfX/6;
-  zHeight = shelfBackZ-supportZ;
-
-    hull() {
-       translate([0, (zHeight-rad)]) 
-          circle(r=rad, center = true);
-        translate([0, (shelfBackZ-supportZ)*slender/2])
-          square([2*xRad, (shelfBackZ-supportZ)*slender], center = true);
-    }
-
-}
-
-
-module shelfBack() {
-  //center the back vertically
-  translate([0, -(shelfBackZ-supportZ)/2, 0]) 
-    difference() {
-      union() {
-        square([shelfX, supportZ], center = true);
-        for (i=[-1, 1]) {
-          translate([i*shelfX/3, supportZ/2, 0])
-            hanger();
+      difference() {
+        offset(delta = -1*(wall+material*2)) {
+          shelfXZBack(r=50);
+        }
+        if (cutouts) {
+          translate([0, -shelfBackZ])
+           trunk(size = shelfBackZ/2, depth = 7, seed = 42, minGrowth = .7);
         }
       }
-      translate([0, supportZ/2, 0])
-        rotate([0, 0, 180])
-        hanger();
-    }
-}
-
-  
-//assembleBack();
-
-module assembleBack() {
-  offsetRad = -2*(finger+wall);
-  union() {
-    difference() {
-      shelfBack();
-      offset(r = offsetRad) {
-        shelfBack();
-      }
-    }
-    difference() {
-      offset(r=offsetRad+.01) {
-        shelfBack();
-
-      }
-      translate([-shelfX/2, -shelfBackZ/2, 0])
-        resize([shelfX*1.5, shelfBackZ*1.5, 0])
-        random_voronoi(nuclei=false, n=64, round=19, min=0, max=400, seed=round(seed[0]));
+      translate([-shelfX/2, -shelfBackZ/2])
+        outsideCuts(length = shelfX, finger = finger, cutD = material, uDiv = uFingerX);
     }
   }
 }
-*/
+
 
 module shelf2D() {
   shelfXY();
