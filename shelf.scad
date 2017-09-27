@@ -1,6 +1,6 @@
 //Kitchen Shelf
 //include <../libraries/voronoi.scad>
-include <./fractal_2d.scad>
+include <./fractal_tree.scad>
 
 shelfX = 400;
 shelfY = 200;
@@ -213,18 +213,10 @@ module assembleXZBack() {
         shelfXZBack(r=50);
       }
     } 
-    difference() {
-      offset(delta = -1*(wall+finger)) {
-        shelfXZBack(r=50);
-      }       translate([0, -shelfBackZ/2, 0])
-        trunk(size = shelfBackZ/6, depth = 9, seed = 10);
-
-    }
 
   }
 }
 
-assembleXZBack();
 
 
 /*
