@@ -158,6 +158,11 @@ module shelfYZ() {
   }
 }
 
+module keyhole() {
+  circle(r = 20);
+}
+
+keyhole();
 
 module shelfPolyYZ(seed=42) {
   //seed=rands(1,50, 1);
@@ -324,6 +329,6 @@ module shelf3D() {
   */
 }
 
-shelf2D();
+//shelf2D();
 
 //shelf3D();
