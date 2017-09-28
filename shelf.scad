@@ -16,7 +16,7 @@ material = 4.2;
 wall = 8;
 
 cutouts = false;
-//cutouts = true;
+cutouts = true;
 
 /* [Hidden] */
 
@@ -215,9 +215,7 @@ module shelfXZBack(r=50) {
 
   }
 }
-assembleXZBack();
 
-//shelf2D();
 
 module assembleXZBack() {
   maxFingerY = floor(shelfY/finger);
@@ -245,7 +243,6 @@ module assembleXZBack() {
   }
 }
 
-
 module shelf2D() {
   shelfXY();
 
@@ -262,6 +259,8 @@ module shelf2D() {
     rotate([180, 0, -90])
     shelfPolyYZ();
 
+  translate([0, shelfBackZ/2+shelfY/2+separation, 0])
+    assembleXZBack();
   /*
   translate([-(shelfX/2+shelfZ/2+separation), 0, 0])
     rotate([0, 180, 90])
@@ -284,6 +283,24 @@ module shelf3D() {
     linear_extrude(height = material, center = true)
     shelfXZ();
 
+  color("purple")
+    translate([shelfX/2-material/2, 0, supportZ/2-material/2])
+    rotate([90, 0, -90])
+    linear_extrude(height = material, center = true)
+    shelfPolyYZ();
+
+  color("purple")
+    translate([-(shelfX/2-material/2), 0, supportZ/2-material/2])
+    rotate([90, 0, -90])
+    linear_extrude(height = material, center = true)
+    shelfPolyYZ();
+
+  color("yellow")
+    translate([0, shelfY/2-material/2, shelfBackZ/2-material/2])
+    rotate([90, 0, 0])
+    linear_extrude(height = material, center = true)
+    assembleXZBack();
+  /*
   color("yellow")
     translate([shelfX/2-material/2, 0, shelfZ/2-material/2])
     rotate([90, 0, -90])
@@ -295,9 +312,9 @@ module shelf3D() {
     rotate([90, 0, -90])
     linear_extrude(height = material, center = true)
     shelfYZ();
-
+  */
 }
 
 //shelf2D();
 
-//shelf3D();
+shelf3D();
