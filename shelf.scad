@@ -159,15 +159,19 @@ module shelfYZ() {
 }
 
 
+shelfPolyYZ();
+
 module shelfPolyYZ(seed=42) {
   //seed=rands(1,50, 1);
   edgeThick = wall+material;
 
   maxFingerY = floor(shelfY/finger);
   maxFingerZ = floor(shelfZ/finger);
+  maxSupportZ = floor(supportZ/finger);
 
   uFingerY = (maxFingerY%2)==0 ? maxFingerY-3 : maxFingerY-2;
   uFingerZ = (maxFingerZ%2)==0 ? maxFingerZ-3 : maxFingerZ-2;
+  uFingerSupportZ = (maxSupportZ%2)==0 ? maxSupportZ-3 : maxSupportZ-2;
 
   points = [[0,0], [shelfY, 0], [shelfY, shelfZ], [0, supportZ]];
 
@@ -195,9 +199,16 @@ module shelfPolyYZ(seed=42) {
           rotate([])
           insideCuts(length = shelfY, finger = finger, cutD = material, uDiv = uFingerY);
 
+        //front edge
         translate([shelfY, (shelfZ-uFingerZ*finger)/2, 0])
           rotate([0, 0, 90])
           insideCuts(length = shelfZ, finger = finger, cutD = material, uDiv = uFingerZ);
+      
+        //back edge
+        translate([material, (supportZ-uFingerSupportZ*finger)/2, 0])
+          rotate([0, 0, 90])
+          insideCuts(length = supportZ, finger = finger, cutD = material,
+                    uDiv = uFingerSupportZ);
       }
 }
 
@@ -317,4 +328,4 @@ module shelf3D() {
 
 //shelf2D();
 
-shelf3D();
+//shelf3D();
