@@ -156,5 +156,5 @@ module branch_three(size, depth, seed, widthBottom, widthTop, joint,
 //trunk(size = 50, depth = 6, leafScale = .5, seed = 56, minGrowth = .89, 
 //      maxGrowth = 1, leaf = false);
 
-//trunk(depth = 5, seed = 58);
+//trunk(depth = 5, seed = 55);
 
