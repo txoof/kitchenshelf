@@ -159,8 +159,6 @@ module shelfYZ() {
 }
 
 
-shelfPolyYZ();
-
 module shelfPolyYZ(seed=42) {
   //seed=rands(1,50, 1);
   edgeThick = wall+material;
@@ -326,6 +324,6 @@ module shelf3D() {
   */
 }
 
-//shelf2D();
+shelf2D();
 
 //shelf3D();
