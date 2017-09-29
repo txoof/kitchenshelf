@@ -18,6 +18,12 @@ wall = 8;
 cutouts = false;
 cutouts = true;
 
+//hanger dimensions
+hangerX = 15;
+hangerZ = 45;
+hangerRad = 5;
+
+
 /* [Hidden] */
 
 //Overage for cuts
@@ -158,10 +164,6 @@ module shelfYZ() {
   }
 }
 
-hangerX = 15;
-hangerZ = 65;
-hangerRad = 5;
-
 module keyhole(border = false) {
   r= border==true ? wall : 0;
 
@@ -180,8 +182,6 @@ module keyhole(border = false) {
 
   }
 }
-
-keyhole();
 
 module shelfPolyYZ(seed=42) {
   //seed=rands(1,50, 1);
@@ -249,6 +249,7 @@ module shelfXZBack(r=50) {
   }
 }
 
+assembleXZBack();
 
 module assembleXZBack() {
   maxFingerY = floor(shelfY/finger);
@@ -257,9 +258,14 @@ module assembleXZBack() {
   uFingerY = (maxFingerY%2)==0 ? maxFingerY-3 : maxFingerY-2;
   uFingerX = (maxFingerX%2)==0 ? maxFingerX-3 : maxFingerX-2;
 
+  keyholeX = 0;
+  keyholeZ = 0;
+
+
   union() {
     difference() {
       shelfXZBack(r=50);
+
 
       difference() {
         offset(delta = -1*(wall+material*2)) {
@@ -272,6 +278,14 @@ module assembleXZBack() {
       }
       translate([-shelfX/2, -shelfBackZ/2])
         outsideCuts(length = shelfX, finger = finger, cutD = material, uDiv = uFingerX);
+      for (i=[-1, 1]) {
+        translate([i*(shelfX/2-(hangerX+2*wall)/2-wall*2), shelfBackZ/2-(2*wall)-hangerZ/2])
+          keyhole(true);
+      }
+    }  
+    for (i=[-1, 1]) {
+      translate([i*(shelfX/2-(hangerX+2*wall)/2-wall*2), shelfBackZ/2-(2*wall)-hangerZ/2])
+        keyhole();
     }
   }
 }
