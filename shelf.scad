@@ -158,8 +158,27 @@ module shelfYZ() {
   }
 }
 
-module keyhole() {
-  circle(r = 20);
+hangerX = 15;
+hangerZ = 65;
+hangerRad = 5;
+
+module keyhole(border = false) {
+  r= border==true ? wall : 0;
+
+  difference() {
+    if (border==false) {
+      keyhole(true);
+    }    offset(r = r) {
+      hull() {
+        square([hangerX, hangerZ-hangerRad*2], center = true);
+        for (i=[-1,1]) {
+          translate([0, i*(hangerZ/2-hangerRad)])
+            circle(r=hangerRad);
+        }
+      }
+    }
+
+  }
 }
 
 keyhole();
