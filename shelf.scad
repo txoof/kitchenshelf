@@ -16,7 +16,7 @@ material = 4.2;
 wall = 8;
 
 cutouts = false;
-cutouts = true;
+//cutouts = true;
 
 //hanger dimensions
 hangerX = 20;
@@ -29,7 +29,7 @@ hangerRad = 10;
 //Overage for cuts
 o = .01;
 
-//separation of parts
+//separation of parts in 2d layout
 separation = 5;
 
 // cuts that fall completely inside the edge
@@ -231,8 +231,10 @@ module shelfPolyYZ(seed=42) {
         //back edge
         translate([material, (supportZ-uFingerSupportZ*finger)/2, 0])
           rotate([0, 0, 90])
-          insideCuts(length = supportZ, finger = finger, cutD = material,
+          #outsideCuts(length = supportZ, finger = finger, cutD = material,
                     uDiv = uFingerSupportZ);
+//          insideCuts(length = supportZ, finger = finger, cutD = material,
+//                    uDiv = uFingerSupportZ);
       }
 }
 
@@ -251,14 +253,13 @@ module shelfXZBack(r=50) {
   }
 }
 
-assembleXZBack();
 
 //back portion of the shelf
 module assembleXZBack(seed=74) {
-  maxFingerY = floor(shelfY/finger);
+  maxFingerZ = floor(supportZ/finger);
   maxFingerX = floor(shelfX/finger);
 
-  uFingerY = (maxFingerY%2)==0 ? maxFingerY-3 : maxFingerY-2;
+  uFingerZ = (maxFingerZ%2)==0 ? maxFingerZ-3 : maxFingerZ-2;
   uFingerX = (maxFingerX%2)==0 ? maxFingerX-3 : maxFingerX-2;
 
   //positions for hanger keyholes
@@ -290,7 +291,10 @@ module assembleXZBack(seed=74) {
       //bottom edge fingers
       translate([-shelfX/2, -shelfBackZ/2])
         outsideCuts(length = shelfX, finger = finger, cutD = material, uDiv = uFingerX);
-
+  
+      #translate([shelfX/2-material, 0, 0])
+        rotate([0, 0, -90])
+        insideCuts(length = supportZ, finger = finger, cutD = material, uDiv = uFingerZ);
     } 
 
     //add hanger keyholes
@@ -365,12 +369,12 @@ module shelf3D() {
     linear_extrude(height = material, center = true)
     shelfPolyYZ();
 
+  /*
   color("yellow")
     translate([0, shelfY/2-material/2, shelfBackZ/2-material/2])
     rotate([90, 0, 0])
     linear_extrude(height = material, center = true)
     assembleXZBack();
-  /*
   color("yellow")
     translate([shelfX/2-material/2, 0, shelfZ/2-material/2])
     rotate([90, 0, -90])
@@ -387,4 +391,5 @@ module shelf3D() {
 
 //shelf2D();
 
-//shelf3D();
+//assembleXZBack();
+shelf3D();
