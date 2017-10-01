@@ -2,29 +2,42 @@
 //include <../libraries/voronoi.scad>
 include <./fractal_tree.scad>
 
+/*[Shelf Dimensions]*/
+//X dimension (width)
 shelfX = 320;
+//Y dimension (depth)
 shelfY = 130;
+//Z dimension (height front)
 shelfZ = 40;
-
+//Z dimeiosn (height back)
 shelfBackZ = 180;
-supportZ = shelfBackZ*.5;
+//height of support (percentage of back height)
+pctHeight = 80; //[30:80]
 
+/*[material and assembly]*/
+//width of finger joints
 finger = 10;
 
-material = 4.2;
+//thickness of material
+material = 3.3;
 
-wall = 8;
+//wall thickness (border for cutouts)
+wall = 10;
 
+//add stylish cutouts
 cutouts = false;
-//cutouts = true;
 
-//hanger dimensions
+/*[hanger dimensions]*/
+//width of hanger hole
 hangerX = 20;
+//height of hanger hole
 hangerZ = 38;
+//radius of curve at bottom of hanger hole
 hangerRad = 10;
 
-
 /* [Hidden] */
+//support height
+supportZ = shelfBackZ*pctHeight/100;
 
 //Overage for cuts
 o = .01;
@@ -117,6 +130,7 @@ module shelfXZ() {
     translate([-shelfX/2, -shelfZ/2-o, 0])
       outsideCuts(length = shelfX, finger = finger+o, cutD = material, uDiv = uFingerX);
 
+    //left and right sides
     translate([shelfX/2, -shelfZ/2, 0])
       rotate([0, 0, 90])
       outsideCuts(length = shelfZ, finger = finger, cutD = material, uDiv = uFingerZ);
@@ -137,7 +151,6 @@ module shelfXZ() {
   }
 	
 }
-
 
 
 module shelfYZ() {
@@ -231,7 +244,7 @@ module shelfPolyYZ(seed=42) {
         //back edge
         translate([material, (supportZ-uFingerSupportZ*finger)/2, 0])
           rotate([0, 0, 90])
-          #outsideCuts(length = supportZ, finger = finger, cutD = material,
+          insideCuts(length = supportZ, finger = finger, cutD = material,
                     uDiv = uFingerSupportZ);
 //          insideCuts(length = supportZ, finger = finger, cutD = material,
 //                    uDiv = uFingerSupportZ);
@@ -291,10 +304,14 @@ module assembleXZBack(seed=74) {
       //bottom edge fingers
       translate([-shelfX/2, -shelfBackZ/2])
         outsideCuts(length = shelfX, finger = finger, cutD = material, uDiv = uFingerX);
-  
-      #translate([shelfX/2-material, 0, 0])
-        rotate([0, 0, -90])
-        insideCuts(length = supportZ, finger = finger, cutD = material, uDiv = uFingerZ);
+
+      //left and right edge
+      translate([-shelfX/2+material, -shelfBackZ/2, 0])
+        rotate([0, 0, 90])
+        outsideCuts(length = supportZ, finger = finger, cutD = material, uDiv = uFingerZ);
+      translate([shelfX/2, -shelfBackZ/2, 0])
+        rotate([0, 0, 90])
+        outsideCuts(length = supportZ, finger = finger, cutD = material, uDiv = uFingerZ);
     } 
 
     //add hanger keyholes
@@ -369,12 +386,14 @@ module shelf3D() {
     linear_extrude(height = material, center = true)
     shelfPolyYZ();
 
-  /*
   color("yellow")
     translate([0, shelfY/2-material/2, shelfBackZ/2-material/2])
     rotate([90, 0, 0])
     linear_extrude(height = material, center = true)
     assembleXZBack();
+  
+  
+  /*
   color("yellow")
     translate([shelfX/2-material/2, 0, shelfZ/2-material/2])
     rotate([90, 0, -90])
