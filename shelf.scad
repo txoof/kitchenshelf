@@ -2,11 +2,11 @@
 //include <../libraries/voronoi.scad>
 include <./fractal_tree.scad>
 
-shelfX = 400;
-shelfY = 200;
-shelfZ = 80;
+shelfX = 320;
+shelfY = 130;
+shelfZ = 40;
 
-shelfBackZ = 300;
+shelfBackZ = 180;
 supportZ = shelfBackZ*.5;
 
 finger = 10;
@@ -19,9 +19,9 @@ cutouts = false;
 cutouts = true;
 
 //hanger dimensions
-hangerX = 15;
-hangerZ = 45;
-hangerRad = 5;
+hangerX = 20;
+hangerZ = 38;
+hangerRad = 10;
 
 
 /* [Hidden] */
@@ -170,18 +170,20 @@ module keyhole(border = false) {
   difference() {
     if (border==false) {
       keyhole(true);
-    }    offset(r = r) {
+    }    
+    offset(r = r) {
       hull() {
-        square([hangerX, hangerZ-hangerRad*2], center = true);
-        for (i=[-1,1]) {
-          translate([0, i*(hangerZ/2-hangerRad)])
-            circle(r=hangerRad);
-        }
+        translate([0, hangerRad/2])
+          square([hangerX, hangerZ-hangerRad], center = true);
+        translate([0, -(hangerZ/2-hangerRad)])
+          circle(r=hangerRad);
+        
       }
     }
 
   }
 }
+
 
 module shelfPolyYZ(seed=42) {
   //seed=rands(1,50, 1);
@@ -249,7 +251,7 @@ module shelfXZBack(r=50) {
   }
 }
 
-assembleXZBack();
+//assembleXZBack();
 
 module assembleXZBack() {
   maxFingerY = floor(shelfY/finger);
@@ -258,9 +260,9 @@ module assembleXZBack() {
   uFingerY = (maxFingerY%2)==0 ? maxFingerY-3 : maxFingerY-2;
   uFingerX = (maxFingerX%2)==0 ? maxFingerX-3 : maxFingerX-2;
 
-  keyholeX = 0;
-  keyholeZ = 0;
-
+  keyholeX = shelfX/2-wall*3-hangerX/2;
+  //keyholeX = 0;
+  keyholeZ = shelfBackZ/2-hangerZ/2-2*wall;
 
   union() {
     difference() {
@@ -279,12 +281,12 @@ module assembleXZBack() {
       translate([-shelfX/2, -shelfBackZ/2])
         outsideCuts(length = shelfX, finger = finger, cutD = material, uDiv = uFingerX);
       for (i=[-1, 1]) {
-        translate([i*(shelfX/2-(hangerX+2*wall)/2-wall*2), shelfBackZ/2-(2*wall)-hangerZ/2])
+        translate([i*keyholeX, keyholeZ])
           keyhole(true);
       }
     }  
     for (i=[-1, 1]) {
-      translate([i*(shelfX/2-(hangerX+2*wall)/2-wall*2), shelfBackZ/2-(2*wall)-hangerZ/2])
+      translate([i*keyholeX, keyholeZ])
         keyhole();
     }
   }
@@ -364,4 +366,4 @@ module shelf3D() {
 
 //shelf2D();
 
-//shelf3D();
+shelf3D();
