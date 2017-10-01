@@ -251,43 +251,64 @@ module shelfXZBack(r=50) {
   }
 }
 
-//assembleXZBack();
+assembleXZBack();
 
-module assembleXZBack() {
+//back portion of the shelf
+module assembleXZBack(seed=42) {
   maxFingerY = floor(shelfY/finger);
   maxFingerX = floor(shelfX/finger);
 
   uFingerY = (maxFingerY%2)==0 ? maxFingerY-3 : maxFingerY-2;
   uFingerX = (maxFingerX%2)==0 ? maxFingerX-3 : maxFingerX-2;
 
+  //positions for hanger keyholes
   keyholeX = shelfX/2-wall*3-hangerX/2;
-  //keyholeX = 0;
   keyholeZ = shelfBackZ/2-hangerZ/2-2*wall;
 
   union() {
     difference() {
+      //main body
       shelfXZBack(r=50);
 
-
+      //cutter for the inside negative area
       difference() {
         offset(delta = -1*(wall+material*2)) {
-          shelfXZBack(r=50);
+          shelfXZBack(r = 50);
         }
+        //add a fractal tree cutout to the inside
         if (cutouts) {
           translate([0, -shelfBackZ])
-           trunk(size = shelfBackZ/2, depth = 7, seed = 42, minGrowth = .7);
+           trunk(size = shelfBackZ/2, depth = 7, seed = seed, joint = 0.11, 
+                minGrowth = .755);
         }
       }
-      translate([-shelfX/2, -shelfBackZ/2])
-        outsideCuts(length = shelfX, finger = finger, cutD = material, uDiv = uFingerX);
+        //made space in tree design for keyholes
       for (i=[-1, 1]) {
         translate([i*keyholeX, keyholeZ])
           keyhole(true);
       }
-    }  
-    for (i=[-1, 1]) {
-      translate([i*keyholeX, keyholeZ])
-        keyhole();
+      //bottom edge fingers
+      translate([-shelfX/2, -shelfBackZ/2])
+        outsideCuts(length = shelfX, finger = finger, cutD = material, uDiv = uFingerX);
+
+    } 
+
+    //add hanger keyholes
+
+    //difference a larger shelfback to remove any portion of the keyhole 
+    //that extends past the main shelf back
+    difference() {
+      for (i=[-1, 1]) {
+        translate([i*keyholeX, keyholeZ])
+          keyhole();
+      }
+      //create a shelfback cutter that has a hole cut out in the center
+      difference() {
+        offset(delta = 2*wall) {
+          shelfXZBack(r=50);
+        }
+        shelfXZBack(r=50);
+      }
     }
   }
 }
@@ -366,4 +387,4 @@ module shelf3D() {
 
 //shelf2D();
 
-shelf3D();
+//shelf3D();
