@@ -27,8 +27,9 @@ module animate() {
   trunk(seed=seed);
   translate([0, -40])
     color("red")
-    text(str("seed: ",seed), size = 40, halign = "center");
+    text(str("seed: ", seed), size = 40, halign = "center");
 }
 
 //array();
-animate();
+//animate();
+
