@@ -12,7 +12,7 @@ shelfZ = 40;
 //Z dimeiosn (height back)
 shelfBackZ = 180;
 //height of support (percentage of back height)
-pctHeight = 80; //[30:80]
+pctHeight = 60; //[30:80]
 
 /*[material and assembly]*/
 //width of finger joints
@@ -340,7 +340,6 @@ module shelf2D() {
   translate([0, -(shelfY/2+shelfZ/2+separation)])
     rotate([0, 0, 180])
     shelfXZ();
-
  
   translate([(shelfX/2+supportZ/2+separation), 0, 0])
     rotate([0, 0, -90])
@@ -352,15 +351,32 @@ module shelf2D() {
 
   translate([0, shelfBackZ/2+shelfY/2+separation, 0])
     assembleXZBack();
-  /*
-  translate([-(shelfX/2+shelfZ/2+separation), 0, 0])
-    rotate([0, 180, 90])
-    shelfYZ();
-  translate([(shelfX/2+shelfZ/2+separation), 0, 0])
-    rotate([0, 0, -90])
-    shelfYZ();
-  */
+ 
+}
 
+
+module shelf2D_cutlayout() {
+  shelfXY();
+
+  benchmark = [10, 20];
+
+  translate([0, -(shelfY/2+shelfZ/2+separation)])
+    rotate([0, 0, 180])
+    shelfXZ();
+ 
+  translate([(shelfX/2+supportZ/2+separation), 0, 0])
+    rotate([0, 0, -90])
+    shelfPolyYZ();
+  
+  translate([(shelfX/2+supportZ/2+separation*2+shelfZ), 0, 0])
+    rotate([0, 0, 90])
+    shelfPolyYZ();
+
+  translate([0, shelfBackZ/2+shelfY/2+separation, 0])
+    assembleXZBack();
+  
+  translate([shelfX/2+benchmark[0], shelfY/2+benchmark[1]/2+separation])
+    square(benchmark, center = true);
 }
 
 module shelf3D() {
@@ -393,22 +409,11 @@ module shelf3D() {
     assembleXZBack();
   
   
-  /*
-  color("yellow")
-    translate([shelfX/2-material/2, 0, shelfZ/2-material/2])
-    rotate([90, 0, -90])
-    linear_extrude(height = material, center = true)
-    shelfYZ();
-
-  color("Khaki")
-    translate([-(shelfX/2-material/2), 0, shelfZ/2-material/2])
-    rotate([90, 0, -90])
-    linear_extrude(height = material, center = true)
-    shelfYZ();
-  */
 }
 
-//shelf2D();
+
+//!shelf2D();
+shelf2D_cutlayout();
 
 //assembleXZBack();
-shelf3D();
+//shelf3D();
