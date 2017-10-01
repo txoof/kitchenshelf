@@ -254,7 +254,7 @@ module shelfXZBack(r=50) {
 assembleXZBack();
 
 //back portion of the shelf
-module assembleXZBack(seed=42) {
+module assembleXZBack(seed=74) {
   maxFingerY = floor(shelfY/finger);
   maxFingerX = floor(shelfX/finger);
 
