@@ -46,6 +46,9 @@ o = .01;
 //separation of parts in 2d layout
 separation = 5;
 
+//Appliance Dimensions
+speakerDim = [93, 95, 156];
+
 // cuts that fall completely inside the edge
 module insideCuts(length, finger, cutD, uDiv) {
   numFinger = floor(uDiv/2);
@@ -381,6 +384,23 @@ module shelf2D_cutlayout() {
     square(benchmark, center = true);
 }
 
+module speaker() {
+  color("yellow")
+    translate([0, 0, speakerDim[2]/2])
+    cube(speakerDim, center = true);
+}
+
+rpiDim = [235, 110, 135];
+
+module rpi() {
+  color("gray")
+    translate([0, 0, rpiDim[2]/2])
+    cube(rpiDim, true);
+}
+
+
+appliances = true;
+
 module shelf3D() {
   color("blue")
     linear_extrude(height = material, center = true)
@@ -410,7 +430,15 @@ module shelf3D() {
     linear_extrude(height = material, center = true)
     assembleXZBack();
   
-  
+  if (appliances) {
+    translate([shelfX/2-speakerDim[0]/2-material, -shelfY/2+speakerDim[1]/2+material, 
+              material/2])
+      speaker();
+
+    translate([-shelfX/2+rpiDim[0]/2+material, -shelfY/2+rpiDim[1]/2+material, material/2])
+      rpi();
+  }
+
 }
 
 
