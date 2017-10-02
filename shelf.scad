@@ -26,6 +26,9 @@ wall = 10;
 
 //add stylish cutouts
 cutouts = false;
+cutouts = true;
+// add devices to 3D rendering
+devices = true;
 
 /*[hanger dimensions]*/
 //width of hanger hole
@@ -36,6 +39,9 @@ hangerZ = 38;
 hangerRad = 10;
 
 /* [Hidden] */
+speakerDim = [93, 95, 156];
+rpiDim = [235, 110, 135];
+
 //support height
 supportZ = shelfBackZ*pctHeight/100;
 
@@ -380,6 +386,21 @@ module shelf2D_cutlayout() {
     square(benchmark, center = true);
 }
 
+
+module speaker() {
+  color("yellow")
+    translate([0, 0, speakerDim[2]/2])
+    cube(speakerDim, center = true);
+}
+
+module rpi() {
+  color("gray")
+    translate([0, 0, rpiDim[2]/2])
+  cube([235, 110, 135], center = true);
+}
+
+devices = true;
+
 module shelf3D() {
   color("blue")
     linear_extrude(height = material, center = true)
@@ -408,6 +429,14 @@ module shelf3D() {
     rotate([90, 0, 0])
     linear_extrude(height = material, center = true)
     assembleXZBack();
+
+  if (devices) {
+    translate([shelfX/2-speakerDim[0]/2-material, 
+              -shelfY/2+speakerDim[1]/2+material, material/2])
+      speaker();
+    translate([-shelfX/2+rpiDim[0]/2+material, -shelfY/2+rpiDim[1]/2+material, material/2])
+      rpi();
+  }
   
   
 }
