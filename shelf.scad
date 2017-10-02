@@ -1,6 +1,6 @@
 //Kitchen Shelf
 //include <../libraries/voronoi.scad>
-include <./fractal_tree.scad>
+use <./fractal_tree.scad>
 
 /*[Shelf Dimensions]*/
 //X dimension (width)
@@ -26,6 +26,7 @@ wall = 10;
 
 //add stylish cutouts
 cutouts = false;
+cutouts = true;
 
 /*[hanger dimensions]*/
 //width of hanger hole
