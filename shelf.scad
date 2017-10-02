@@ -28,6 +28,9 @@ wall = 10;
 cutouts = false;
 cutouts = true;
 
+//add appliances to 3D layout
+appliances = true;
+
 /*[hanger dimensions]*/
 //width of hanger hole
 hangerX = 20;
@@ -48,6 +51,7 @@ separation = 5;
 
 //Appliance Dimensions
 speakerDim = [93, 95, 156];
+rpiDim = [235, 110, 135];
 
 // cuts that fall completely inside the edge
 module insideCuts(length, finger, cutD, uDiv) {
@@ -339,6 +343,22 @@ module assembleXZBack(seed=74) {
   }
 }
 
+//shims to take up space behind the shelf
+module shim(sets = 4) {
+  shimDim = [wall, shelfBackZ*.1];
+  translate([shimDim[0]/2 - (shimDim[0]*1.2*(sets))/2, 0, 0])
+  for (i=[0:sets-1]) {
+    for (j=[-1, 1]) {
+      translate([i*shimDim[0]*1.2, j*shimDim[1]*.6]){
+        difference() {
+          square(shimDim, true);
+          text("S", size = shimDim[1]/6, halign = "center", valign = "center"); 
+        }
+      }
+    }
+  }
+}
+
 module shelf2D() {
   shelfXY();
 
@@ -380,6 +400,9 @@ module shelf2D_cutlayout() {
   translate([0, shelfBackZ/2+shelfY/2+separation, 0])
     assembleXZBack();
   
+    shim();
+
+  // add benchmark
   translate([shelfX/2+benchmark[0], shelfY/2+benchmark[1]/2+separation])
     square(benchmark, center = true);
 }
@@ -390,7 +413,6 @@ module speaker() {
     cube(speakerDim, center = true);
 }
 
-rpiDim = [235, 110, 135];
 
 module rpi() {
   color("gray")
@@ -399,7 +421,6 @@ module rpi() {
 }
 
 
-appliances = true;
 
 module shelf3D() {
   color("blue")
@@ -443,7 +464,7 @@ module shelf3D() {
 
 
 //shelf2D();
-//shelf2D_cutlayout();
+shelf2D_cutlayout();
 
 //assembleXZBack();
-shelf3D();
+//shelf3D();
