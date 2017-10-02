@@ -4,11 +4,11 @@ include <./fractal_tree.scad>
 
 /*[Shelf Dimensions]*/
 //X dimension (width)
-shelfX = 320;
+shelfX = 350;
 //Y dimension (depth)
-shelfY = 130;
+shelfY = 140;
 //Z dimension (height front)
-shelfZ = 40;
+shelfZ = 45;
 //Z dimeiosn (height back)
 shelfBackZ = 180;
 //height of support (percentage of back height)
@@ -144,7 +144,7 @@ module shelfXZ() {
       }
       if (cutouts) {
         translate([0, -shelfX/2])
-          trunk(size = shelfX/4, depth = 6, seed = 322, minGrowth = 0.84);
+          trunk(size = shelfX/4, depth = 6, seed = 7, minGrowth = 0.84);
       }
     }
 
