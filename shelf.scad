@@ -162,7 +162,7 @@ module shelfYZ() {
  
 
   difference() {
-    color("yellow")
+    color("purple")
     union() {
       square([shelfY, shelfZ], center = true);
 
@@ -279,6 +279,7 @@ module assembleXZBack(seed=74) {
   keyholeX = shelfX/2-wall*3-hangerX/2;
   keyholeZ = shelfBackZ/2-hangerZ/2-2*wall;
 
+  color("orange")
   union() {
     difference() {
       //main body
@@ -402,7 +403,7 @@ module shelf3D() {
     linear_extrude(height = material, center = true)
     shelfPolyYZ();
 
-  color("yellow")
+  color("orange")
     translate([0, shelfY/2-material/2, shelfBackZ/2-material/2])
     rotate([90, 0, 0])
     linear_extrude(height = material, center = true)
@@ -412,8 +413,8 @@ module shelf3D() {
 }
 
 
-//!shelf2D();
-shelf2D_cutlayout();
+//shelf2D();
+//shelf2D_cutlayout();
 
 //assembleXZBack();
-//shelf3D();
+shelf3D();
