@@ -1,7 +1,32 @@
-//2D fractal Tree w/ extra paramaters
+/*
+2D fractal Tree w/ extra paramaters
+
+Based on "Procedurally Generated Trees" by steveweber314 on instructables
+http://www.instructables.com/id/Procedurally-Generated-Trees/
+
+use from with an OpenSCAD design:
+use </path/to/this/file/fractal_tree.scad>
+
+call with:
+trunk();
+
+paramaters:
+  size = [real]               Base size for the trunk
+  depth = [integer 0:1]       Number of recursions (warning: /exponentially more 
+                              opperations per increase of depth
+  seed = [real>0]             Random seed to base tree on 
+  widthBottom = [real 0:1]    Width of bottom of each segment as a proportion of size
+  widthTop = [real 0:1]       Width of top of each segment a s aproportion of size
+  joint = [real 0:1]          Size of joint as percentage of size
+  minGrowth = [real 0.1:1.2]  Minimum amount to grow branch as percentage of previous
+  maxGrowth = [real 0.1:1.2]  Maximum amount to grow branch as precentage of previous
+  leafScale = [real 0.1:1]    Radius of leaf as a percentage of branch size
+  leaf = [boolean true:false] True: include leaves, False: skip leaves
+
+*/
 
 /* [Tree Paramaters] */
-
+trunk();
 
 module trapezoid(h = 10, b1 = 10, b2 = 5) {
   points=[[-b1/2, 0], [b1/2, 0], [b2/2, h], [-b2/2, h]];
@@ -9,7 +34,7 @@ module trapezoid(h = 10, b1 = 10, b2 = 5) {
 }
 
 
-module trunk(size = 100, depth = 7, seed = 7,
+module trunk(size = 100, depth = 7, seed = 6,
             widthBottom = 0.25, widthTop = 0.18, joint = 0.11, 
             minGrowth = 0.8, maxGrowth = 1.2, 
             leafScale = 0.5, leaf = false) {
@@ -17,7 +42,7 @@ module trunk(size = 100, depth = 7, seed = 7,
     entropy = rands(0.1, leafScale, seed+2)[0];
     branchType = rands(0, 100, 1, seed+3)[0];
 
-    //skip branches smaller than 10% of the specified size
+    //skip branches smaller than 10% of size
     if (size > size*.1) {
      
       if (0 < branchType && branchType < 15) {  
@@ -158,5 +183,5 @@ module branch_three(size, depth, seed, widthBottom, widthTop, joint,
 //trunk(size = 50, depth = 6, leafScale = .5, seed = 56, minGrowth = .89, 
 //      maxGrowth = 1, leaf = false);
 
-//trunk(depth = 5, seed = 55);
+//trunk(depth = 5, seed = 58);
 
