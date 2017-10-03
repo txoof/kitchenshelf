@@ -1,14 +1,14 @@
 //Kitchen Shelf
 //include <../libraries/voronoi.scad>
-include <./fractal_tree.scad>
+use <./fractal_tree.scad>
 
 /*[Shelf Dimensions]*/
 //X dimension (width)
-shelfX = 320;
+shelfX = 350;
 //Y dimension (depth)
-shelfY = 130;
+shelfY = 140;
 //Z dimension (height front)
-shelfZ = 40;
+shelfZ = 45;
 //Z dimeiosn (height back)
 shelfBackZ = 180;
 //height of support (percentage of back height)
@@ -26,6 +26,10 @@ wall = 10;
 
 //add stylish cutouts
 cutouts = false;
+cutouts = true;
+
+//add appliances to 3D layout
+appliances = true;
 
 /*[hanger dimensions]*/
 //width of hanger hole
@@ -44,6 +48,10 @@ o = .01;
 
 //separation of parts in 2d layout
 separation = 5;
+
+//Appliance Dimensions
+speakerDim = [93, 95, 156];
+rpiDim = [235, 110, 135];
 
 // cuts that fall completely inside the edge
 module insideCuts(length, finger, cutD, uDiv) {
@@ -144,7 +152,7 @@ module shelfXZ() {
       }
       if (cutouts) {
         translate([0, -shelfX/2])
-          trunk(size = shelfX/4, depth = 6, seed = 322, minGrowth = 0.84);
+          trunk(size = shelfX/4, depth = 6, seed = 7, minGrowth = 0.84);
       }
     }
 
@@ -162,7 +170,7 @@ module shelfYZ() {
  
 
   difference() {
-    color("yellow")
+    color("purple")
     union() {
       square([shelfY, shelfZ], center = true);
 
@@ -279,6 +287,7 @@ module assembleXZBack(seed=74) {
   keyholeX = shelfX/2-wall*3-hangerX/2;
   keyholeZ = shelfBackZ/2-hangerZ/2-2*wall;
 
+  color("orange")
   union() {
     difference() {
       //main body
@@ -334,6 +343,22 @@ module assembleXZBack(seed=74) {
   }
 }
 
+//shims to take up space behind the shelf
+module shim(sets = 4) {
+  shimDim = [wall, shelfBackZ*.1];
+  translate([shimDim[0]/2 - (shimDim[0]*1.2*(sets))/2, 0, 0])
+  for (i=[0:sets-1]) {
+    for (j=[-1, 1]) {
+      translate([i*shimDim[0]*1.2, j*shimDim[1]*.6]){
+        difference() {
+          square(shimDim, true);
+          text("S", size = shimDim[1]/6, halign = "center", valign = "center"); 
+        }
+      }
+    }
+  }
+}
+
 module shelf2D() {
   shelfXY();
 
@@ -375,9 +400,27 @@ module shelf2D_cutlayout() {
   translate([0, shelfBackZ/2+shelfY/2+separation, 0])
     assembleXZBack();
   
+    shim();
+
+  // add benchmark
   translate([shelfX/2+benchmark[0], shelfY/2+benchmark[1]/2+separation])
     square(benchmark, center = true);
 }
+
+module speaker() {
+  color("yellow")
+    translate([0, 0, speakerDim[2]/2])
+    cube(speakerDim, center = true);
+}
+
+
+module rpi() {
+  color("gray")
+    translate([0, 0, rpiDim[2]/2])
+    cube(rpiDim, true);
+}
+
+
 
 module shelf3D() {
   color("blue")
@@ -402,17 +445,25 @@ module shelf3D() {
     linear_extrude(height = material, center = true)
     shelfPolyYZ();
 
-  color("yellow")
+  color("orange")
     translate([0, shelfY/2-material/2, shelfBackZ/2-material/2])
     rotate([90, 0, 0])
     linear_extrude(height = material, center = true)
     assembleXZBack();
   
-  
+  if (appliances) {
+    translate([shelfX/2-speakerDim[0]/2-material, -shelfY/2+speakerDim[1]/2+material, 
+              material/2])
+      speaker();
+
+    translate([-shelfX/2+rpiDim[0]/2+material, -shelfY/2+rpiDim[1]/2+material, material/2])
+      rpi();
+  }
+
 }
 
 
-//!shelf2D();
+//shelf2D();
 shelf2D_cutlayout();
 
 //assembleXZBack();
