@@ -53,6 +53,9 @@ separation = 5;
 speakerDim = [93, 95, 156];
 rpiDim = [235, 110, 135];
 
+//shim dimensions
+shimDim = [wall+material*2, shelfBackZ*.2];
+
 // cuts that fall completely inside the edge
 module insideCuts(length, finger, cutD, uDiv) {
   numFinger = floor(uDiv/2);
@@ -343,16 +346,21 @@ module assembleXZBack(seed=74) {
   }
 }
 
+//3d shim module for layout
+module shim3d() {
+  color("red")
+    cube([shimDim[0], material, shimDim[1]], center = true);
+}
+
 //shims to take up space behind the shelf
 module shim(sets = 4) {
-  shimDim = [wall, shelfBackZ*.1];
-  translate([shimDim[0]/2 - (shimDim[0]*1.2*(sets))/2, 0, 0])
   for (i=[0:sets-1]) {
-    for (j=[-1, 1]) {
+    for (j=[0, 2]) {
       translate([i*shimDim[0]*1.2, j*shimDim[1]*.6]){
         difference() {
-          square(shimDim, true);
-          text("S", size = shimDim[1]/6, halign = "center", valign = "center"); 
+          square(shimDim);
+          translate([shimDim[0]/2, shimDim[1]/2])
+          #text("S", size = shimDim[1]/6, halign = "center", valign = "center"); 
         }
       }
     }
@@ -400,13 +408,14 @@ module shelf2D_cutlayout() {
   translate([0, shelfBackZ/2+shelfY/2+separation, 0])
     assembleXZBack();
   
+  translate([shelfX/2+separation, shelfY/2+ separation])
     shim();
 
   // add benchmark
-  translate([shelfX/2+benchmark[0], shelfY/2+benchmark[1]/2+separation])
+  translate([shelfX/2+benchmark[0], -(shelfY/2+benchmark[1]/2+separation)])
     square(benchmark, center = true);
 }
-
+cutouts=false;
 module speaker() {
   color("yellow")
     translate([0, 0, speakerDim[2]/2])
@@ -460,11 +469,14 @@ module shelf3D() {
       rpi();
   }
 
+  translate([shelfX/2-shimDim[0]/2, shelfY/2, 0])
+    shim3d();
+
 }
 
 
 //shelf2D();
-shelf2D_cutlayout();
+//shelf2D_cutlayout();
 
 //assembleXZBack();
-//shelf3D();
+shelf3D();
