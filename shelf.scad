@@ -349,18 +349,37 @@ module assembleXZBack(seed=74) {
 //3d shim module for layout
 module shim3d() {
   color("red")
-    cube([shimDim[0], material, shimDim[1]], center = true);
+    linear_extrude(height = material) {
+      shim(center = true);
+    }
 }
 
+module shim(radius = 2, center = false) {
+
+  $fn = 36;
+  trans = center==true ? [-shimDim[0]/2, -shimDim[1]/2, 0] : 
+                          [radius, radius, 0];
+
+  translate(trans)
+  difference() {
+    minkowski() {
+      square([shimDim[0]-2*radius, shimDim[1]-2*radius], center = false);
+      translate([])
+        circle(r = radius);
+    }
+    #text("S", size = shimDim[1]*.1); 
+  }
+}
+
+
 //shims to take up space behind the shelf
-module shim(sets = 4) {
+module shimLayout(sets = 4) {
   for (i=[0:sets-1]) {
     for (j=[0, 2]) {
       translate([i*shimDim[0]*1.2, j*shimDim[1]*.6]){
         difference() {
-          square(shimDim);
-          translate([shimDim[0]/2, shimDim[1]/2])
-          #text("S", size = shimDim[1]/6, halign = "center", valign = "center"); 
+          shim(center = false);
+          //square(shimDim);
         }
       }
     }
@@ -409,7 +428,7 @@ module shelf2D_cutlayout() {
     assembleXZBack();
   
   translate([shelfX/2+separation, shelfY/2+ separation])
-    shim();
+    shimLayout(1);
 
   // add benchmark
   translate([shelfX/2+benchmark[0], -(shelfY/2+benchmark[1]/2+separation)])
@@ -469,14 +488,17 @@ module shelf3D() {
       rpi();
   }
 
-  translate([shelfX/2-shimDim[0]/2, shelfY/2, 0])
-    shim3d();
-
+  for(i=[-1,1]) {
+    translate([i*(shelfX/2-shimDim[0]/2+i*material/2), shelfY/2+material, 
+              shimDim[1]/2])
+      rotate([90, 0, 0])
+      shim3d();
+  }
 }
 
 
 //shelf2D();
-//shelf2D_cutlayout();
+shelf2D_cutlayout();
 
 //assembleXZBack();
-shelf3D();
+//shelf3D();
