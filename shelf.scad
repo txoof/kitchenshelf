@@ -14,6 +14,8 @@ shelfBackZ = 180;
 //height of support (percentage of back height)
 pctHeight = 60; //[30:80]
 
+echo(shelfY+shelfBackZ+shelfZ+3*separation);
+
 /*[material and assembly]*/
 //width of finger joints
 finger = 10;
