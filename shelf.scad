@@ -14,8 +14,6 @@ shelfBackZ = 180;
 //height of support (percentage of back height)
 pctHeight = 60; //[30:80]
 
-echo(shelfY+shelfBackZ+shelfZ+3*separation);
-
 /*[material and assembly]*/
 //width of finger joints
 finger = 10;
@@ -27,7 +25,7 @@ material = 3.3;
 wall = 10;
 
 //add stylish cutouts
-cutouts = false;
+//cutouts = false;
 cutouts = true;
 
 //add appliances to 3D layout
@@ -420,23 +418,24 @@ module shelf2D_cutlayout() {
  
   translate([(shelfX/2+supportZ/2+separation), 0, 0])
     rotate([0, 0, -90])
-    shelfPolyYZ();
+    shelfPolyYZ(42);
   
   translate([(shelfX/2+supportZ/2+separation*2+shelfZ), 0, 0])
     rotate([0, 0, 90])
-    shelfPolyYZ();
+    shelfPolyYZ(10);
 
   translate([0, shelfBackZ/2+shelfY/2+separation, 0])
     assembleXZBack();
   
   translate([shelfX/2+separation, shelfY/2+ separation])
-    shimLayout(1);
+    shimLayout(5);
 
   // add benchmark
   translate([shelfX/2+benchmark[0], -(shelfY/2+benchmark[1]/2+separation)])
     square(benchmark, center = true);
 }
-cutouts=false;
+
+
 module speaker() {
   color("yellow")
     translate([0, 0, speakerDim[2]/2])
