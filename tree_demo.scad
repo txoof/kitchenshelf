@@ -1,5 +1,5 @@
 //fractal tree demo
-include <./fractal_tree.scad>
+use <./fractal_tree.scad>
 
 rows = 5;
 columns = 10;
@@ -10,7 +10,7 @@ module array() {
     for (j = [0:rows-1]) {
       translate([i*box[0], j*box[1]])
         linear_extrude(height = 1, center = true) {
-          trunk(seed = j*10+i);
+          trunk(size = 45, seed = j*10+i);
         }
       
       translate([i*box[0], j*box[1]-40])
@@ -30,6 +30,6 @@ module animate() {
     text(str("seed: ", seed), size = 40, halign = "center");
 }
 
-//array();
+array();
 //animate();
 
