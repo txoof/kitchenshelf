@@ -26,7 +26,6 @@ paramaters:
 */
 
 /* [Tree Paramaters] */
-trunk();
 
 module trapezoid(h = 10, b1 = 10, b2 = 5) {
   points=[[-b1/2, 0], [b1/2, 0], [b2/2, h], [-b2/2, h]];
@@ -184,4 +183,4 @@ module branch_three(size, depth, seed, widthBottom, widthTop, joint,
 //      maxGrowth = 1, leaf = false);
 
 //trunk(depth = 5, seed = 58);
-
+trunk(size = 100, seed = 47);
