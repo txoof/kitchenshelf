@@ -277,8 +277,6 @@ module shelfXZBack(r=50) {
   }
 }
 
-//cutouts=false;
-!assembleXZBack();
 
 //back portion of the shelf
 module assembleXZBack(seed=74) {
@@ -370,7 +368,7 @@ module shim(radius = 2, center = false) {
       translate([])
         circle(r = radius);
     }
-    #text("S", size = shimDim[1]*.1); 
+    text("S", size = shimDim[1]*.1); 
   }
 }
 
@@ -502,7 +500,7 @@ module shelf3D() {
 
 
 //shelf2D();
-//shelf2D_cutlayout();
+shelf2D_cutlayout();
 
 //assembleXZBack();
-shelf3D();
+//shelf3D();
