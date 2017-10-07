@@ -16,13 +16,13 @@ pctHeight = 60; //[30:80]
 
 /*[material and assembly]*/
 //width of finger joints
-finger = 10;
+finger = 8;
 
 //thickness of material
-material = 3.3;
+material = 5.5;
 
 //wall thickness (border for cutouts)
-wall = 10;
+wall = 8.5;
 
 //add stylish cutouts
 //cutouts = false;
@@ -189,7 +189,7 @@ module shelfYZ() {
 }
 
 module keyhole(border = false) {
-  r= border==true ? wall : 0;
+  r= border==true ? wall+material : 0;
 
   difference() {
     if (border==false) {
@@ -277,6 +277,8 @@ module shelfXZBack(r=50) {
   }
 }
 
+//cutouts=false;
+!assembleXZBack();
 
 //back portion of the shelf
 module assembleXZBack(seed=74) {
@@ -287,8 +289,9 @@ module assembleXZBack(seed=74) {
   uFingerX = (maxFingerX%2)==0 ? maxFingerX-3 : maxFingerX-2;
 
   //positions for hanger keyholes
-  keyholeX = shelfX/2-wall*3-hangerX/2;
-  keyholeZ = shelfBackZ/2-hangerZ/2-2*wall;
+  keyholeX = shelfX/2-wall*2-hangerX/2-material*2;
+  //keyholeZ = shelfBackZ/2-hangerZ/2-2*wall-material/2;
+  keyholeZ = shelfBackZ/2-hangerZ/2-wall-material*2;
 
   color("orange")
   union() {
@@ -308,7 +311,7 @@ module assembleXZBack(seed=74) {
                 minGrowth = .755);
         }
       }
-        //made space in tree design for keyholes
+        //make space in tree design for keyholes
       for (i=[-1, 1]) {
         translate([i*keyholeX, keyholeZ])
           keyhole(true);
@@ -428,7 +431,7 @@ module shelf2D_cutlayout() {
     assembleXZBack();
   
   translate([shelfX/2+separation, shelfY/2+ separation])
-    shimLayout(5);
+    shimLayout(3);
 
   // add benchmark
   translate([shelfX/2+benchmark[0], -(shelfY/2+benchmark[1]/2+separation)])
@@ -499,7 +502,7 @@ module shelf3D() {
 
 
 //shelf2D();
-shelf2D_cutlayout();
+//shelf2D_cutlayout();
 
 //assembleXZBack();
-//shelf3D();
+shelf3D();
