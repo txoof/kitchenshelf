@@ -1,11 +1,19 @@
 /*
-2D fractal Tree w/ extra paramaters
+2D fractal Tree 
+
+This creates a TWO DIMENSIONAL tree that can be used in creating laser-cut designs
+
+It is possible to create a 3d extrusion of the tree using the following code:
+  linear_extrude(height = 5) {
+    trunk();
+  }
 
 Based on "Procedurally Generated Trees" by steveweber314 on instructables
 http://www.instructables.com/id/Procedurally-Generated-Trees/
 
-use from with an OpenSCAD design:
-use </path/to/this/file/fractal_tree.scad>
+to use from with an OpenSCAD design:
+
+  use </path/to/this/file/fractal_tree.scad>
 
 call with:
 trunk();
@@ -26,6 +34,46 @@ paramaters:
 */
 
 /* [Tree Paramaters] */
+
+//Base size for trunk
+size = 100; //[10:500]
+
+//Depth of recursion (more depth, more complexity)
+depth = 6; //[1:9]
+
+//Psuedo-random seed to base tree structure on
+seed = 42; //[0:100]
+
+//Thickness for printable STL
+thickness = 10; //[1:100]
+
+//ratio of bottom of branch to previous branch
+widthBottom = 0.25; //[0.1:0.05:1.2]
+
+//ratio of top of branch to previous branch
+widthTop = 0.18; //[0.1:0.05:1.2]
+
+//size of joint between branches perportional to branch size
+joint = 0.11; //[0:0.01:1]
+
+//minimum amount to grow new brach as percentage of previous
+minGrowth = 0.8; //[0.1:0.05:1.2]
+
+//maximum amount to grow new branch as percantage of previous
+maxGrowth = 1.2; //[0.01:0.05:1.2]
+
+//size of leaf relative to branch size
+leafScale = 0.5; //[0:0.1:1]
+
+//add leaves?
+leaf = false; //[true, false]
+
+linear_extrude(height = thickness) {
+  trunk(size = size, depth =depth, seed = seed, widthBottom = widthBottom,
+      widthTop = widthTop, joint = joint, minGrowth = minGrowth, maxGrowth = maxGrowth,
+      leafScale = leafScale, leaf = leaf);
+}
+
 
 module trapezoid(h = 10, b1 = 10, b2 = 5) {
   points=[[-b1/2, 0], [b1/2, 0], [b2/2, h], [-b2/2, h]];
@@ -183,4 +231,4 @@ module branch_three(size, depth, seed, widthBottom, widthTop, joint,
 //      maxGrowth = 1, leaf = false);
 
 //trunk(depth = 5, seed = 58);
-trunk(size = 100, seed = 47);
+//trunk(size = 100, seed = 47);

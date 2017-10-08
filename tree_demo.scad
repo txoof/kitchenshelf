@@ -30,6 +30,6 @@ module animate() {
     text(str("seed: ", seed), size = 40, halign = "center");
 }
 
-array();
-//animate();
+//array();
+animate();
 
