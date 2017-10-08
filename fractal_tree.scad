@@ -1,3 +1,40 @@
+/* [Tree] */
+
+// Base size for trunk
+size = 100; //[10:500]
+
+// Depth of recursion (more depth, more complexity)
+depth = 6; //[1:9]
+
+// Psuedo-random seed to base tree structure on
+seed = 42; //[0:100]
+
+// Thickness for printable STL
+thickness = 10; //[1:100]
+
+// ratio of bottom of branch to previous branch
+widthBottom = 0.25; //[0.1:0.05:1.2]
+
+// ratio of top of branch to previous branch
+widthTop = 0.18; //[0.1:0.05:1.2]
+
+// size of joint between branches perportional to branch size
+joint = 0.11; //[0:0.01:1]
+
+// minimum amount to grow new brach as percentage of previous
+minGrowth = 0.8; //[0.1:0.05:1.2]
+
+// maximum amount to grow new branch as percantage of previous
+maxGrowth = 1.2; //[0.01:0.05:1.2]
+
+// size of leaf relative to branch size
+leafScale = 0.5; //[0:0.1:1]
+
+// add leaves?
+leaf = false; //[true, false]
+
+/* [Hidden] */
+
 /*
 2D fractal Tree 
 
@@ -33,47 +70,20 @@ paramaters:
 
 */
 
-/* [Tree Paramaters] */
-
-//Base size for trunk
-size = 100; //[10:500]
-
-//Depth of recursion (more depth, more complexity)
-depth = 6; //[1:9]
-
-//Psuedo-random seed to base tree structure on
-seed = 42; //[0:100]
-
-//Thickness for printable STL
-thickness = 10; //[1:100]
-
-//ratio of bottom of branch to previous branch
-widthBottom = 0.25; //[0.1:0.05:1.2]
-
-//ratio of top of branch to previous branch
-widthTop = 0.18; //[0.1:0.05:1.2]
-
-//size of joint between branches perportional to branch size
-joint = 0.11; //[0:0.01:1]
-
-//minimum amount to grow new brach as percentage of previous
-minGrowth = 0.8; //[0.1:0.05:1.2]
-
-//maximum amount to grow new branch as percantage of previous
-maxGrowth = 1.2; //[0.01:0.05:1.2]
-
-//size of leaf relative to branch size
-leafScale = 0.5; //[0:0.1:1]
-
-//add leaves?
-leaf = false; //[true, false]
-
 linear_extrude(height = thickness) {
   trunk(size = size, depth =depth, seed = seed, widthBottom = widthBottom,
       widthTop = widthTop, joint = joint, minGrowth = minGrowth, maxGrowth = maxGrowth,
       leafScale = leafScale, leaf = leaf);
 }
 
+
+//examples
+
+//trunk(size = 50, depth = 6, leafScale = .5, seed = 56, minGrowth = .89, 
+//      maxGrowth = 1, leaf = false);
+
+//trunk(depth = 5, seed = 58);
+//trunk(size = 100, seed = 47);
 
 module trapezoid(h = 10, b1 = 10, b2 = 5) {
   points=[[-b1/2, 0], [b1/2, 0], [b2/2, h], [-b2/2, h]];
@@ -227,8 +237,3 @@ module branch_three(size, depth, seed, widthBottom, widthTop, joint,
 }
 
 
-//trunk(size = 50, depth = 6, leafScale = .5, seed = 56, minGrowth = .89, 
-//      maxGrowth = 1, leaf = false);
-
-//trunk(depth = 5, seed = 58);
-//trunk(size = 100, seed = 47);
