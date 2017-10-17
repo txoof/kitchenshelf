@@ -19,7 +19,7 @@ pctHeight = 60; //[30:80]
 finger = 8;
 
 //thickness of material
-material = 5.5;
+material = 4;
 
 //wall thickness (border for cutouts)
 wall = 8.5;
@@ -429,7 +429,7 @@ module shelf2D_cutlayout() {
     assembleXZBack();
   
   translate([shelfX/2+separation, shelfY/2+ separation])
-    shimLayout(3);
+    shimLayout(4);
 
   // add benchmark
   translate([shelfX/2+benchmark[0], -(shelfY/2+benchmark[1]/2+separation)])
