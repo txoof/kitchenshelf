@@ -19,7 +19,7 @@ pctHeight = 60; //[30:80]
 finger = 8;
 
 //thickness of material
-material = 4;
+material = 6;
 
 //wall thickness (border for cutouts)
 wall = 8.5;
